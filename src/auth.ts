@@ -1,7 +1,8 @@
 import NextAuth, { NextAuthConfig, User } from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { loginService } from "./service/auth-service";
+import { loginService, registerService } from "./service/auth-service";
+import { use } from "react";
 
 declare module "next-auth" {
 	/**
@@ -52,19 +53,40 @@ const authConfig = {
 		}),
 	],
 	callbacks: {
-		async signIn({ user, account, profile, email, credentials }) {
-			console.log(
-				"google oathhtthth",
-				user,
-				account,
-				profile,
-				email,
-				credentials
-			);
+		async signIn({ account, profile }) {
+			console.log(account, profile);
+			if (account?.provider === "google") {
+				/***
+				 * sign in user
+				 * email: profile.email
+				 * password: account.providerAccountId
+				 */
+				if (account.providerAccountId && profile?.email) {
+					const user: APIResponse<{
+						token: string;
+					}> = await loginService({
+						email: profile?.email,
+						password: account.providerAccountId,
+					});
+
+					if (user.status === "INTERNAL_SERVER_ERROR") {
+						const newUser = await registerService({
+							email: profile.email,
+							password: account.providerAccountId,
+							username: profile.name as string,
+						});
+						console.log("new userserseres", newUser);
+						if (newUser?.status === "CONFLICT") {
+							return "/login?error=oauth";
+						}
+					}
+				}
+
+				return true;
+			}
 			return true;
 		},
 		async session({ session, user, token }) {
-			console.log("token");
 			if (token?.token) {
 				session.user.token = "asfdasdfasd";
 			}

@@ -11,18 +11,17 @@ import { Label } from "@/components/ui/label";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 
-import { loginResolver, loginSchema } from "@/schemas/auth-schema";
+import { registerResolver, registerSchema } from "@/schemas/auth-schema";
 import { IUserBasicInfo } from "@/types/auth";
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { time } from "console";
 
-type LoginSchema = z.infer<typeof loginSchema>;
+type RegisterSchema = z.infer<typeof registerSchema>;
 
-interface ILoginInfo extends Omit<IUserBasicInfo, "username"> {}
+interface IRegisterInfo extends IUserBasicInfo {}
 
-export function LoginForm({
+export function RegisterForm({
 	className,
 	...props
 }: React.ComponentProps<"div">) {
@@ -45,17 +44,17 @@ export function LoginForm({
 	}, []);
 
 	const defaultValues = {
+		username: "",
 		email: "",
 		password: "",
-	} satisfies ILoginInfo;
+	} satisfies IRegisterInfo;
 
 	const {
 		register,
 		handleSubmit,
-		unregister,
 		formState: { errors },
-	} = useForm<LoginSchema>({
-		resolver: loginResolver,
+	} = useForm<RegisterSchema>({
+		resolver: registerResolver,
 		defaultValues,
 	});
 
@@ -63,7 +62,7 @@ export function LoginForm({
 		await signIn("google");
 	};
 
-	const onSubmit: SubmitHandler<ILoginInfo> = async (data) => {
+	const onSubmit: SubmitHandler<IRegisterInfo> = async (data) => {
 		const res = await signIn("credentials", {
 			email: data.email,
 			password: data.password,
@@ -82,11 +81,26 @@ export function LoginForm({
 			<Toaster className="text-red-500" />
 			<Card>
 				<CardHeader className="text-3xl font-semibold text-center">
-					Login
+					Register
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="flex flex-col gap-6">
+							<div className="grid gap-3">
+								<Label htmlFor="username">Username</Label>
+								<Input
+									{...register("username")}
+									id="username"
+									type="text"
+									placeholder="username"
+								/>
+								{errors?.email && (
+									<p className="text-xs text-red-500 mt-1">
+										{" "}
+										{errors?.email?.message}
+									</p>
+								)}
+							</div>
 							<div className="grid gap-3">
 								<Label htmlFor="email">Email</Label>
 								<Input
@@ -119,7 +133,7 @@ export function LoginForm({
 							</div>
 							<div className="flex flex-col gap-3">
 								<Button type="submit" className="w-full hover:cursor-pointer">
-									Login
+									Register
 								</Button>
 								<Button
 									type="button"
@@ -132,12 +146,12 @@ export function LoginForm({
 							</div>
 						</div>
 						<div className="mt-4 text-center text-sm">
-							Don&apos;t have an account?{" "}
+							Already have an account?{" "}
 							<a
-								onClick={() => router.replace("/register")}
+								onClick={() => router.replace("/login")}
 								className="underline underline-offset-4"
 							>
-								Sign up
+								Login
 							</a>
 						</div>
 					</form>

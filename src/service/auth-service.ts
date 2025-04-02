@@ -16,3 +16,14 @@ export async function loginService(
 	});
 	return await res.json();
 }
+
+export async function registerService(credentails: IUserBasicInfo) {
+	const res = await fetch(`${BASE_URL}/auth/register`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(credentails),
+	});
+	return await res.json();
+}
