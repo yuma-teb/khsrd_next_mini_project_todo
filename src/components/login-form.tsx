@@ -8,14 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+
 import { loginResolver, loginSchema } from "@/schemas/auth-schema";
+import { IUserBasicInfo } from "@/types/auth";
+import { signIn } from "next-auth/react";
 
 type LoginSchema = z.infer<typeof loginSchema>;
 
-interface ILoginInput {
-	email: string;
-	password: string;
-}
+interface ILoginInfo extends Omit<IUserBasicInfo, "username"> {}
 
 export function LoginForm({
 	className,
@@ -24,7 +26,7 @@ export function LoginForm({
 	const defaultValues = {
 		email: "",
 		password: "",
-	};
+	} satisfies ILoginInfo;
 
 	const {
 		register,
@@ -33,14 +35,26 @@ export function LoginForm({
 		formState: { errors },
 	} = useForm<LoginSchema>({
 		resolver: loginResolver,
+		defaultValues,
 	});
 
-	const onSubmit: SubmitHandler<ILoginInput> = (data) => {
-		console.log("datat", data);
+	const onSubmit: SubmitHandler<ILoginInfo> = async (data) => {
+		const res = await signIn("credentials", {
+			email: data.email,
+			password: data.password,
+			redirect: false,
+		});
+
+		if (res?.error) {
+			toast.error(
+				<p className="text-xs text-red-500">incorrect email or password </p>
+			);
+		}
 	};
 
 	return (
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
+			<Toaster className="text-red-500" />
 			<Card>
 				<CardHeader className="text-3xl font-semibold text-center">
 					Login
