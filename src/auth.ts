@@ -88,7 +88,7 @@ const authConfig = {
 		},
 		async session({ session, user, token }) {
 			if (token?.token) {
-				session.user.token = "asfdasdfasd";
+				session.user.token = token.token as string;
 			}
 			return session;
 		},
