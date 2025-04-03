@@ -14,7 +14,7 @@ import {
 	Sparkles,
 	Trash2,
 } from "lucide-react";
-
+import { useState, useEffect } from "react";
 import { NavMain } from "./nav-main";
 import {
 	Sidebar,
@@ -23,7 +23,8 @@ import {
 	SidebarRail,
 } from "@/components/ui/sidebar";
 import { NavFavorites } from "./nav-favorite";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ResWorkSpace } from "@/types/workspace";
+import { getAllWorkSpaceService } from "@/service/workspace-service";
 
 // This is sample data.
 const data = {
@@ -256,14 +257,18 @@ const data = {
 	],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface Props extends React.ComponentProps<typeof Sidebar> {
+	workSpaces: ResWorkSpace[];
+}
+
+export function AppSidebar({ workSpaces, ...props }: Readonly<Props>) {
 	return (
 		<Sidebar className="border-r-0" {...props}>
 			<SidebarHeader>
 				<NavMain items={data.navMain} />
 			</SidebarHeader>
 			<SidebarContent>
-				<NavFavorites favorites={data.favorites} />
+				<NavFavorites workSpaces={workSpaces} />
 			</SidebarContent>
 			<SidebarRail />
 		</Sidebar>

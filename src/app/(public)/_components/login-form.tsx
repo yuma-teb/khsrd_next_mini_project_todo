@@ -16,7 +16,6 @@ import { IUserBasicInfo } from "@/types/auth";
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { time } from "console";
 
 type LoginSchema = z.infer<typeof loginSchema>;
 
@@ -52,7 +51,6 @@ export function LoginForm({
 	const {
 		register,
 		handleSubmit,
-		unregister,
 		formState: { errors },
 	} = useForm<LoginSchema>({
 		resolver: loginResolver,
@@ -69,6 +67,8 @@ export function LoginForm({
 			password: data.password,
 			redirect: false,
 		});
+		console.log("workin herererer", data);
+		return;
 
 		if (res?.error) {
 			toast.error(

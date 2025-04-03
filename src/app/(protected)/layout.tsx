@@ -1,15 +1,18 @@
 import { AppSidebar } from "./_components/side-bar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "./_components/side-bar/side-header";
+import { ResWorkSpace } from "@/types/workspace";
+import { getAllWorkSpace } from "../actions/workspaceActions";
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	const workSpaces = (await getAllWorkSpace()) as APIResponse<ResWorkSpace[]>;
 	return (
 		<SidebarProvider>
-			<AppSidebar variant="inset" />
+			<AppSidebar workSpaces={workSpaces?.payload} variant="inset" />
 			<SidebarInset>
 				<SiteHeader />
 				<div className="flex flex-1 flex-col">

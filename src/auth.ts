@@ -2,7 +2,6 @@ import NextAuth, { NextAuthConfig, User } from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { loginService, registerService } from "./service/auth-service";
-import { use } from "react";
 
 declare module "next-auth" {
 	/**
@@ -19,6 +18,7 @@ declare module "next-auth" {
 }
 
 const authConfig = {
+	debug: true,
 	providers: [
 		CredentialProvider({
 			name: "credentails",
@@ -54,7 +54,6 @@ const authConfig = {
 	],
 	callbacks: {
 		async signIn({ account, profile }) {
-			console.log(account, profile);
 			if (account?.provider === "google") {
 				/***
 				 * sign in user

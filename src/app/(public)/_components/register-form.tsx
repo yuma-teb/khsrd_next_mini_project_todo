@@ -16,6 +16,7 @@ import { IUserBasicInfo } from "@/types/auth";
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { registerService } from "@/service/auth-service";
 
 type RegisterSchema = z.infer<typeof registerSchema>;
 
@@ -63,11 +64,13 @@ export function RegisterForm({
 	};
 
 	const onSubmit: SubmitHandler<IRegisterInfo> = async (data) => {
-		const res = await signIn("credentials", {
+		const res = await registerService({
 			email: data.email,
 			password: data.password,
-			redirect: false,
+			username: data.username,
 		});
+
+		console.log("rss", res);
 
 		if (res?.error) {
 			toast.error(
@@ -94,10 +97,10 @@ export function RegisterForm({
 									type="text"
 									placeholder="username"
 								/>
-								{errors?.email && (
+								{errors?.username && (
 									<p className="text-xs text-red-500 mt-1">
 										{" "}
-										{errors?.email?.message}
+										{errors?.username?.message}
 									</p>
 								)}
 							</div>

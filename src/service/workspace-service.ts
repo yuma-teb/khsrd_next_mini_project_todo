@@ -1,5 +1,6 @@
+import { fetchAPI } from "@/lib/api";
 import { WORKSPACE_ENDPOINT } from "@/lib/constants";
-import headerToken from "@/lib/header";
+import { ResWorkSpace } from "@/types/workspace";
 
 interface QueryParams {
 	pageName: number;
@@ -13,16 +14,30 @@ export async function getAllWorkSpaceService({
 	sortBy = "workspaceId",
 	sortDirection = "ASC",
 } = {}) {
-	const headers = await headerToken();
-
 	const params = new URLSearchParams({
 		pageNo: String(pageNo),
 		pageSize: String(pageSize),
 		sortBy,
 		sortDirection,
 	});
+	let res = null;
+	try {
+		res = await fetchAPI<ResWorkSpace[]>(
+			`${WORKSPACE_ENDPOINT}?${params.toString()}`
+		);
+		console.log("erresss", res);
+		return res;
+	} catch (e) {
+		console.log("errorroro", e);
+	}
+}
 
-	const res = await fetch(`${WORKSPACE_ENDPOINT}?${params.toString()}`, {
-		headers,
-	});
+export async function deleteWorkSpaceService(worksapceId: string) {
+	try {
+		await fetchAPI(`${WORKSPACE_ENDPOINT}/${worksapceId}`, {
+			method: "DELETE",
+		});
+	} catch (e) {
+		console.error(e);
+	}
 }
