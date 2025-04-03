@@ -18,3 +18,6 @@ export interface Task {
 	endDate: string;
 	workspace: Workspace;
 }
+
+export interface ICreateTaskBody
+	extends Omit<Task, "workspace" | "startDate" | "taskId" | "status"> {}

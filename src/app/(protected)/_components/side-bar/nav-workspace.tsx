@@ -15,28 +15,29 @@ import {
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ReactNode } from "react";
+import { useModal } from "@/context/hook/useModal";
+import { Button } from "@/components/ui/button";
 interface Props {
 	workSpaces: ResWorkSpace[];
 }
 
-interface DropDownProps {
-	name: string;
-	dialog: (
-		workspaceId: string,
-		name: string
-	) => {
-		title: string;
-		description: ReactNode;
-		confirmText?: string;
-		cancelText?: string;
-		onConfirm: () => void;
-		onCancel?: () => void;
-	};
-}
-
 export function NavFavorites({ workSpaces }: Readonly<Props>) {
-	const dropDownMenu: string[] = ["edit"];
+	const { openModal } = useModal();
+	const handleEdit = () => {
+		openModal("confirm", {
+			header: "Are you sure?",
+			body: "You won't be able to undo this action.",
+			cancel: "Cancel",
+			accept: "Accept",
+			onCancel: () => {
+				console.log("Action canceled");
+			},
+			onAccept: () => {
+				console.log("Action accepted");
+			},
+		});
+	};
+	const dropDownMenu: string[] = ["edit", ""];
 
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden max-h-1/3">
@@ -55,6 +56,7 @@ export function NavFavorites({ workSpaces }: Readonly<Props>) {
 										<MoreHorizontal className="ml-auto" />
 									</SidebarMenuButton>
 								</DropdownMenuTrigger>
+								<Button onClick={handleEdit}>FGHJKL</Button>
 								<DropdownMenuContent className="p-2 flex flex-col"></DropdownMenuContent>
 							</SidebarMenuItem>
 						</DropdownMenu>
