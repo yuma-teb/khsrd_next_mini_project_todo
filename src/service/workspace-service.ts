@@ -1,6 +1,6 @@
 import { fetchAPI } from "@/lib/api";
 import { WORKSPACE_ENDPOINT } from "@/lib/constants";
-import { ResWorkSpace } from "@/types/workspace";
+import { ResWorkSpace, ResWorkSpaceWithTask } from "@/types/workspace";
 
 interface QueryParams {
 	pageName: number;
@@ -25,17 +25,64 @@ export async function getAllWorkSpaceService({
 		res = await fetchAPI<ResWorkSpace[]>(
 			`${WORKSPACE_ENDPOINT}?${params.toString()}`
 		);
-		console.log("erresss", res);
 		return res;
 	} catch (e) {
 		console.log("errorroro", e);
 	}
 }
 
-export async function deleteWorkSpaceService(worksapceId: string) {
+export async function editWorkSpaceNameById(
+	worksapceId: string,
+	body: Pick<ResWorkSpace, "workspaceName">
+) {
 	try {
-		await fetchAPI(`${WORKSPACE_ENDPOINT}/${worksapceId}`, {
+		console.log("DELETE");
+		const res = await fetchAPI(`${WORKSPACE_ENDPOINT}/${worksapceId}`, {
 			method: "DELETE",
+			body: JSON.stringify(body),
+		});
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+export async function updateWorkSpaceFavoriteById(
+	worksapceId: string,
+	body: Pick<ResWorkSpace, "isFavorite">
+) {
+	try {
+		const res = await fetchAPI(
+			`${WORKSPACE_ENDPOINT}/${worksapceId}/favorite`,
+			{
+				method: "PATCH",
+				body: JSON.stringify(body),
+			}
+		);
+		return res;
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+export async function getWorkSpaceById(workspaceId: string) {
+	try {
+		const res = await fetchAPI<ResWorkSpaceWithTask>(
+			`${WORKSPACE_ENDPOINT}/${workspaceId}`
+		);
+
+		return res;
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+export async function createWorkSpace(
+	body: Pick<ResWorkSpace, "workspaceName">
+) {
+	try {
+		const res = await fetchAPI(`${WORKSPACE_ENDPOINT}`, {
+			method: "POST",
+			body: JSON.stringify(body),
 		});
 	} catch (e) {
 		console.error(e);

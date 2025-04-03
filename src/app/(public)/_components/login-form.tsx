@@ -65,10 +65,8 @@ export function LoginForm({
 		const res = await signIn("credentials", {
 			email: data.email,
 			password: data.password,
-			redirect: false,
+			redirectTo: "/todo",
 		});
-		console.log("workin herererer", data);
-		return;
 
 		if (res?.error) {
 			toast.error(

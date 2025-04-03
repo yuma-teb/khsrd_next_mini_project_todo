@@ -22,7 +22,7 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
-import { NavFavorites } from "./nav-favorite";
+import { NavFavorites } from "./nav-workspace";
 import { ResWorkSpace } from "@/types/workspace";
 import { getAllWorkSpaceService } from "@/service/workspace-service";
 

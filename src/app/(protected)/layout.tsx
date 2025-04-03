@@ -2,7 +2,7 @@ import { AppSidebar } from "./_components/side-bar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "./_components/side-bar/side-header";
 import { ResWorkSpace } from "@/types/workspace";
-import { getAllWorkSpace } from "../actions/workspaceActions";
+import { getAllWorkSpace } from "../actions/workspace-action";
 
 export default async function RootLayout({
 	children,
