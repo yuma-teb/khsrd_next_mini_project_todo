@@ -41,6 +41,7 @@ export async function updateWorkSpaceFavorite(
 			worksapceId,
 			body
 		);
+		revalidatePath("(protected)/todo");
 		return res;
 	} catch (e) {
 		console.error(e);

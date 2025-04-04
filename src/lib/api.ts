@@ -6,7 +6,6 @@ export async function fetchAPI<T>(
 ): Promise<APIResponse<T>> {
 	const headers = await headerToken();
 	try {
-		console.log(url, options, headers);
 		const response = await fetch(url, {
 			...options,
 			headers,

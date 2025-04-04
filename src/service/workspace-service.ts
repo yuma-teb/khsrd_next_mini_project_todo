@@ -1,5 +1,6 @@
 import { fetchAPI } from "@/lib/api";
 import { API_BASE_URL, WORKSPACE_ENDPOINT } from "@/lib/constants";
+import { workSpaceResolver } from "@/schemas/workspace-schema";
 import { ResWorkSpace, ResWorkSpaceWithTask } from "@/types/workspace";
 
 interface QueryParams {
@@ -54,10 +55,9 @@ export async function updateWorkSpaceFavoriteById(
 ) {
 	try {
 		const res = await fetchAPI(
-			`${WORKSPACE_ENDPOINT}/${worksapceId}/favorite`,
+			`${WORKSPACE_ENDPOINT}/${worksapceId}/favorite?favorite=${body.isFavorite}`,
 			{
 				method: "PATCH",
-				body: JSON.stringify(body),
 			}
 		);
 		return res;

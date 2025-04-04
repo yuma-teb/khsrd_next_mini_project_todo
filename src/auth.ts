@@ -74,7 +74,6 @@ const authConfig = {
 							password: account.providerAccountId,
 							username: profile.name as string,
 						});
-						console.log("new userserseres", newUser);
 						if (newUser?.status === "CONFLICT") {
 							return "/login?error=oauth";
 						}

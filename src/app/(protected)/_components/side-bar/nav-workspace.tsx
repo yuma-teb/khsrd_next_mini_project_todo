@@ -72,13 +72,6 @@ export function NavFavorites({ workSpaces }: Readonly<Props>) {
 		});
 	};
 
-	const handleUpdateFavorite = async (
-		workspaceId: string,
-		isFavorite: boolean
-	) => {
-		await updateWorkSpaceFavorite(workspaceId, { isFavorite: !isFavorite });
-	};
-
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden max-h-1/3">
 			<SidebarGroupLabel className="text-md text-black">
@@ -102,15 +95,6 @@ export function NavFavorites({ workSpaces }: Readonly<Props>) {
 								<DropdownMenuContent className="p-2 flex flex-col">
 									<DropdownMenuItem onClick={() => handleEdit(item)}>
 										Edit
-									</DropdownMenuItem>
-									<DropdownMenuItem
-										onClick={() =>
-											handleUpdateFavorite(item.workspaceId, item.isFavorite)
-										}
-									>
-										{!item.isFavorite
-											? "Add to Favorites"
-											: "Remove from Favorites"}
 									</DropdownMenuItem>
 								</DropdownMenuContent>
 							</SidebarMenuItem>

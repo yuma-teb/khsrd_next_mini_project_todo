@@ -70,8 +70,6 @@ export function RegisterForm({
 			username: data.username,
 		});
 
-		console.log("rss", res);
-
 		if (res?.error) {
 			toast.error(
 				<p className="text-xs text-red-500">incorrect email or password </p>
