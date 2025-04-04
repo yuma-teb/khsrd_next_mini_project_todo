@@ -13,57 +13,111 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useModal } from "@/context/hook/useModal";
-import { Button } from "@/components/ui/button";
+import {
+	createNewWorkSpace,
+	updateWorkSpaceFavorite,
+	updateWorkSpaceName,
+} from "@/actions/workspace-action";
+import { WorkSpaceUpdateForm } from "../workspace/workspace-update-form";
+import { useRouter } from "next/navigation";
+
 interface Props {
 	workSpaces: ResWorkSpace[];
 }
 
 export function NavFavorites({ workSpaces }: Readonly<Props>) {
-	const { openModal } = useModal();
-	const handleEdit = () => {
+	const { openModal, closeModal } = useModal();
+	const { push } = useRouter();
+
+	const onEditAction = async (
+		workspaceId: string,
+		body: Pick<ResWorkSpace, "workspaceName">
+	) => {
+		const res = await updateWorkSpaceName(workspaceId, body);
+		closeModal();
+		toast.success("Update successfully!");
+	};
+
+	const onCreateAction = async (body: Pick<ResWorkSpace, "workspaceName">) => {
+		const res = await createNewWorkSpace(body);
+		console.log(res);
+	};
+
+	const handleEdit = (data: ResWorkSpace) => {
 		openModal("confirm", {
-			header: "Are you sure?",
-			body: "You won't be able to undo this action.",
-			cancel: "Cancel",
-			accept: "Accept",
-			onCancel: () => {
-				console.log("Action canceled");
-			},
-			onAccept: () => {
-				console.log("Action accepted");
-			},
+			header: "Edit Workspace",
+			body: (
+				<WorkSpaceUpdateForm
+					action="Edit"
+					item={data}
+					onAction={(body) => onEditAction(data.workspaceId, body)}
+				/>
+			),
 		});
 	};
-	const dropDownMenu: string[] = ["edit", ""];
+
+	const handleCreate = () => {
+		openModal("confirm", {
+			header: "Create Workspace",
+			body: (
+				<WorkSpaceUpdateForm
+					action="Save"
+					onAction={(body) => onCreateAction(body)}
+				/>
+			),
+		});
+	};
+
+	const handleUpdateFavorite = async (
+		workspaceId: string,
+		isFavorite: boolean
+	) => {
+		await updateWorkSpaceFavorite(workspaceId, { isFavorite: !isFavorite });
+	};
 
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden max-h-1/3">
 			<SidebarGroupLabel className="text-md text-black">
 				Favorites
-				<SquarePlus className="ml-auto" />
+				<SquarePlus className="ml-auto" onClick={handleCreate} />
 			</SidebarGroupLabel>
 			<ScrollArea className="h-full w-full rounded-md">
 				<SidebarMenu>
-					{workSpaces.map((item) => (
+					{workSpaces?.map((item) => (
 						<DropdownMenu key={item.workspaceId}>
 							<SidebarMenuItem>
-								<DropdownMenuTrigger asChild>
-									<SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-										{item.workspaceName}
+								<SidebarMenuButton
+									className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+									onClick={() => push(`/todo/${item.workspaceId}?q=workspace`)}
+								>
+									{item.workspaceName}
+									<DropdownMenuTrigger asChild>
 										<MoreHorizontal className="ml-auto" />
-									</SidebarMenuButton>
-								</DropdownMenuTrigger>
-								<Button onClick={handleEdit}>FGHJKL</Button>
-								<DropdownMenuContent className="p-2 flex flex-col"></DropdownMenuContent>
+									</DropdownMenuTrigger>
+								</SidebarMenuButton>
+								<DropdownMenuContent className="p-2 flex flex-col">
+									<DropdownMenuItem onClick={() => handleEdit(item)}>
+										Edit
+									</DropdownMenuItem>
+									<DropdownMenuItem
+										onClick={() =>
+											handleUpdateFavorite(item.workspaceId, item.isFavorite)
+										}
+									>
+										{!item.isFavorite
+											? "Add to Favorites"
+											: "Remove from Favorites"}
+									</DropdownMenuItem>
+								</DropdownMenuContent>
 							</SidebarMenuItem>
 						</DropdownMenu>
 					))}
 				</SidebarMenu>
 			</ScrollArea>
-			<Toaster richColors />
 		</SidebarGroup>
 	);
 }

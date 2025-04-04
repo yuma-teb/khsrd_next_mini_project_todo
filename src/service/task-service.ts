@@ -1,5 +1,5 @@
 import { fetchAPI } from "@/lib/api";
-import { TAWSK_ENDPOINT } from "@/lib/constants";
+import { TASK_ENDPOINT } from "@/lib/constants";
 
 export async function getAllTasksService(worksapceId: string) {
 	try {
@@ -16,7 +16,7 @@ export async function getAllTasksService(worksapceId: string) {
 export async function getTaskByIdService(workspaceId: string, taskId: string) {
 	try {
 		const res = await fetchAPI(
-			`${TAWSK_ENDPOINT}/${taskId}/workspace/${workspaceId}`
+			`${TASK_ENDPOINT}/${taskId}/workspace/${workspaceId}`
 		);
 		return res;
 	} catch (e) {
@@ -31,7 +31,7 @@ export async function udpateTaskByIdService(
 ) {
 	try {
 		const res = await fetchAPI(
-			`${TAWSK_ENDPOINT}/${taskId}/workspace/${workspaceId}`,
+			`${TASK_ENDPOINT}/${taskId}/workspace/${workspaceId}`,
 			{
 				method: "PUT",
 				body: JSON.stringify(body),
@@ -49,7 +49,7 @@ export async function deleteTaskByIdService(
 ) {
 	try {
 		const res = await fetchAPI(
-			`${TAWSK_ENDPOINT}/${taskId}/workspace/${workspaceId}`,
+			`${TASK_ENDPOINT}/${taskId}/workspace/${workspaceId}`,
 			{
 				method: "DELETE",
 			}
@@ -62,7 +62,7 @@ export async function deleteTaskByIdService(
 
 export async function createTaskService(workspaceId: string, body: any) {
 	try {
-		const res = await fetchAPI(`${TAWSK_ENDPOINT}/workspace/${workspaceId}`, {
+		const res = await fetchAPI(`${TASK_ENDPOINT}/workspace/${workspaceId}`, {
 			method: "POST",
 			body: JSON.stringify(body),
 		});

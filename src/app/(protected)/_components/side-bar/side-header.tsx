@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { UserInfo } from "../user/user-info";
 
 export function SiteHeader() {
 	return (
@@ -13,6 +14,7 @@ export function SiteHeader() {
 
 				<h1 className="text-base font-medium">Documents</h1>
 			</div>
+			<UserInfo />
 		</header>
 	);
 }

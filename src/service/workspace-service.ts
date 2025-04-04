@@ -1,5 +1,5 @@
 import { fetchAPI } from "@/lib/api";
-import { WORKSPACE_ENDPOINT } from "@/lib/constants";
+import { API_BASE_URL, WORKSPACE_ENDPOINT } from "@/lib/constants";
 import { ResWorkSpace, ResWorkSpaceWithTask } from "@/types/workspace";
 
 interface QueryParams {
@@ -20,10 +20,9 @@ export async function getAllWorkSpaceService({
 		sortBy,
 		sortDirection,
 	});
-	let res = null;
 	try {
-		res = await fetchAPI<ResWorkSpace[]>(
-			`${WORKSPACE_ENDPOINT}?${params.toString()}`
+		let res = await fetchAPI<ResWorkSpace[]>(
+			`${API_BASE_URL}/workspaces?${params.toString()}`
 		);
 		return res;
 	} catch (e) {
@@ -36,11 +35,14 @@ export async function editWorkSpaceNameById(
 	body: Pick<ResWorkSpace, "workspaceName">
 ) {
 	try {
-		console.log("DELETE");
-		const res = await fetchAPI(`${WORKSPACE_ENDPOINT}/${worksapceId}`, {
-			method: "DELETE",
-			body: JSON.stringify(body),
-		});
+		const res = await fetchAPI<ResWorkSpace>(
+			`${WORKSPACE_ENDPOINT}/${worksapceId}`,
+			{
+				method: "PUT",
+				body: JSON.stringify(body),
+			}
+		);
+		return res;
 	} catch (e) {
 		console.error(e);
 	}
@@ -82,7 +84,9 @@ export async function createWorkSpace(
 	try {
 		const res = await fetchAPI(`${WORKSPACE_ENDPOINT}`, {
 			method: "POST",
-			body: JSON.stringify(body),
+			body: JSON.stringify({
+				workspaceName: body.workspaceName,
+			}),
 		});
 	} catch (e) {
 		console.error(e);

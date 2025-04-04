@@ -6,17 +6,18 @@ export async function fetchAPI<T>(
 ): Promise<APIResponse<T>> {
 	const headers = await headerToken();
 	try {
+		console.log(url, options, headers);
 		const response = await fetch(url, {
 			...options,
 			headers,
-			credentials: "include",
 		});
-		console.log("Rsponsenesnsen", response);
-		if (!response.ok) {
-			throw new Error(`Error: ${response.status} ${response.statusText}`);
+
+		const text = await response.text();
+		if (!text.trim()) {
+			return { message: "", status: "OK", payload: [] } as APIResponse<T>;
 		}
 
-		const data: APIResponse<T> = await response.json();
+		const data: APIResponse<T> = JSON.parse(text);
 		return data;
 	} catch (error) {
 		console.error("API Fetch Error:", error);
