@@ -1,5 +1,6 @@
 import { fetchAPI } from "@/lib/api";
 import { TASK_ENDPOINT } from "@/lib/constants";
+import { Task } from "@/types/task";
 
 export async function getAllTasksService(worksapceId: string) {
 	try {
@@ -60,7 +61,10 @@ export async function deleteTaskByIdService(
 	}
 }
 
-export async function createTaskService(workspaceId: string, body: any) {
+export async function createTaskService(
+	workspaceId: string,
+	body: Partial<Task>
+) {
 	try {
 		const res = await fetchAPI(`${TASK_ENDPOINT}/workspace/${workspaceId}`, {
 			method: "POST",
