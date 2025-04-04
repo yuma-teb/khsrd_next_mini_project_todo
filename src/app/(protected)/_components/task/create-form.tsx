@@ -28,16 +28,17 @@ import { Task } from "@/types/task";
 type createTaskSchema = z.infer<typeof taskSchema>;
 
 interface Props {
+	task: Task;
 	action: string;
 	onAction: (data: Partial<Task>) => void;
 }
 
-export function CreateTaskForm({ action, onAction }: Readonly<Props>) {
+export function CreateTaskForm({ task, action, onAction }: Readonly<Props>) {
 	const defaultValues = {
-		taskTitle: "",
-		taskDetails: "",
-		tag: "DESIGN",
-		endDate: new Date("2025-04-04T02:49:21.394Z"),
+		taskTitle: task?.taskTitle || "",
+		taskDetails: task?.details || "",
+		tag: task?.tag || "DESIGN",
+		endDate: task?.endDate ?? new Date("2025-04-04T02:49:21.394Z"),
 	} as any;
 
 	const {

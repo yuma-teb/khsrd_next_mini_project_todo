@@ -16,7 +16,6 @@ export interface Task {
 	status: "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
 	startDate: string;
 	endDate: string;
-	workspace: Workspace;
 }
 
 export interface ICreateTaskBody
